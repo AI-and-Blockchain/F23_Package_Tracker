@@ -33,6 +33,10 @@
 ## About
 <div align="center">
 <h3 align="center">Package Tracker</h3>
+<p>
+The Package Tracker introduces faster and safer standards of delivery for cities and local populations. Users may sign up to deliver for us, from which they’ll receive instant payment for successful delivery. Packages are brought from a distribution center and delivered to a local parcel locker. Each package has a unique identifier to be scanned in at each point of the process. Receiving users are given real-time updates on the status of their package, as well as optimized route planning. 
+
+</P>
 </div>
 
 ### Built With
