@@ -30,6 +30,13 @@
 
 
 <!-- ABOUT THE PROJECT -->
+Chase Grajeda (grajec)
+
+Jianye Peng (pengj6)
+
+Eddie Poon (poone)
+
+Aneesh (koluka)
 ## About
 <div align="center">
 <h3 align="center">Package Tracker</h3>
