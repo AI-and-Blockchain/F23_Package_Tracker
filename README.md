@@ -6,3 +6,6 @@
 
 ### Flowchart Diagram
 ![image](Assets/Flowchart.png)
+
+### Sequence Diagram
+![image](Assets/sequencediagram.png)
