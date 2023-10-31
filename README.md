@@ -20,6 +20,9 @@
             <a href="#prerequisites"> Prerequisites</a>
         </li>
         <li>
+            <a href="#blockchain"> Blockchain Component</a>
+        </li>
+        <li>
             <a href="#diagrams"> Diagrams</a>
         </li>
         <li>
@@ -56,6 +59,18 @@ The Package Tracker introduces faster and safer standards of delivery for cities
     ```
     * To fork, press the fork button on the top right of the repo, or [here](https:/github.com/AI-and-Blockchain/F23_Package_Tracker/fork)
 
+
+## Blockchain Component
+
+<p>
+QR code creation: We will be required to generate three separate QR codes to call different functions of the smart contract in order to facilitate communication and delivery of information between the three parties: sender, receiver, and courier.
+
+The generation of the QR codes can be done using the following plug-in: https://github.com/jibrelnetwork/ethereum-qr-code/blob/master/README.md
+
+Functions to update state variables, and send status updates such as expected ETA will be created so that the receiver can be aware of the current status of the delivery.
+
+Events can be used to create a log and keep track of the various steps involved from start to finish.
+</P>
 
 ## Diagrams
 
