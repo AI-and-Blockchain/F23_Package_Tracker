@@ -4,7 +4,13 @@
 [![MIT License][license-shield]][license-url]
 [![Activity][activity-shield]][activity-url]
 <!-- [![Stargazers][stars-shield]][stars-url] -->
+Chase Grajeda (grajec)
 
+Jianye Peng (pengj6)
+
+Eddie Poon (poone)
+
+Aneesh (koluka)
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -30,13 +36,6 @@
 
 
 <!-- ABOUT THE PROJECT -->
-Chase Grajeda (grajec)
-
-Jianye Peng (pengj6)
-
-Eddie Poon (poone)
-
-Aneesh (koluka)
 ## About
 <div align="center">
 <h3 align="center">Package Tracker</h3>
