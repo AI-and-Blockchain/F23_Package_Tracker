@@ -69,11 +69,11 @@ Events can be used to create a log and keep track of the various steps involved 
 ### Architecture Diagram
 ![image](Assets/Components.png)
 
-### Flowchart Diagram
-![image](Assets/Flowchart.png)
-
 ### Sequence Diagram
 ![image](Assets/sequencediagram.png)
+
+### Flowchart
+![image](Assets/Flowchart.png)
 
 ## License
 
