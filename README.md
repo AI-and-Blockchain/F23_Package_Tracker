@@ -68,6 +68,7 @@ Events can be used to create a log and keep track of the various steps involved 
 
 ### Architecture Diagram
 ![image](Assets/Architecture.png)
+![image](Assets/HL_components.png)
 
 ### Flowchart Diagram
 ![image](Assets/Flowchart.png)
