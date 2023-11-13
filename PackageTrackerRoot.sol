@@ -32,4 +32,8 @@ contract PackageTrackerRoot {
         MyParcel.status = _status;
         return MyParcel;
     }
+
+    function displayStatus() public view returns (string memory) {
+        return MyParcel.status;
+    }
 }

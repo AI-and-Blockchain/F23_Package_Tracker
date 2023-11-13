@@ -1,2 +1,5 @@
 #Ignore Ganache 
 *.appx
+
+#Ignore json from compiled code
+*.json
