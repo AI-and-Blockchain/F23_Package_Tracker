@@ -62,9 +62,6 @@ package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddre
 update_status = package_tracker_root.functions.updateStatus("lost").build_transaction({
     "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce + 1
 })
-#store_contact = package_tracker_root.functions.addContact(
-#    "name", "+2348112398610"
-#).buildTransaction({"chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce + 1})
 
 sign_update = w3.eth.account.sign_transaction(
     update_status, private_key = private_key
@@ -72,4 +69,4 @@ sign_update = w3.eth.account.sign_transaction(
 send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
 w3.eth.wait_for_transaction_receipt(send_start)
 
-print(package_tracker_root.functions.displayStatus().call())
+print("package status: " + package_tracker_root.functions.displayStatus().call())
