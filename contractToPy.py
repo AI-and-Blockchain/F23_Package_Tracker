@@ -2,6 +2,8 @@ from solcx import compile_standard, install_solc
 from web3 import Web3
 import json 
 
+#Compiles solidity code in python so that it can be interacted with
+
 with open("PackageTrackerRoot.sol", "r") as file:
     package_tracker_file = file.read()
 
@@ -32,8 +34,8 @@ abi = json.loads(compiled_sol["contracts"]["PackageTrackerRoot.sol"]["PackageTra
 # For connecting to ganache
 w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
 chain_id = 1337
-address = "0xBd77397c684DA2b81AE8861f87c18089f7b5764D"
-private_key = "0x58d9f9d0c52b0b16b7b0fd761db24d0005d724b32c89551d3b76bbf94a8b6835" # leaving the private key like this is very insecure if you are working on real world project
+address = "0x36a5526981F69E104553bbEbF6e3072AF9052D2F"
+private_key = "0x016ddaad616481081959bef005937272eb58c67830b258075b23df07061a33ee" # leaving the private key like this is very insecure if you are working on real world project
 # Create the contract in Python
 PackageTrackerRoot = w3.eth.contract(abi=abi, bytecode=bytecode)
 # Get the number of latest transaction
@@ -58,15 +60,18 @@ print("Waiting for transaction to finish...")
 transaction_receipt = w3.eth.wait_for_transaction_receipt(transaction_hash)
 print(f"Done! Contract deployed to {transaction_receipt.contractAddress}")
 
+#Update status of package
 package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
 update_status = package_tracker_root.functions.updateStatus("lost").build_transaction({
     "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce + 1
 })
-
+#Sign the transaction
 sign_update = w3.eth.account.sign_transaction(
     update_status, private_key = private_key
 )
+#Send the transaction
 send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
 w3.eth.wait_for_transaction_receipt(send_start)
 
+#Call displayStatus function to test update
 print("package status: " + package_tracker_root.functions.displayStatus().call())
