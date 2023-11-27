@@ -23,6 +23,9 @@ Aneesh (koluka)
             </ul>
         </li>
         <li>
+            <a href="#prerequisites"> Prerequisites</a>
+        </li>
+        <li>
             <a href="#blockchain"> Blockchain Component</a>
         </li>
         <li>
@@ -50,6 +53,23 @@ The Package Tracker introduces faster and safer standards of delivery for cities
 * [![Remix][Remix]][Remix-url]
 * [![Pytorch][Pytorch]][Pytorch-url]
 * [![Chainlink][Chainlink]][Chainlink-url]
+
+
+<!-- Getting Started -->
+## Prerequisites
+ * Clone or fork the repo
+    * GitHub Desktop: download [here](https://desktop.github.com/)
+    * Clone repo through Git Bash
+    ```sh
+    $ git clone https://github.com/AI-and-Blockchain/F23_Package_Tracker
+    ```
+    * To fork, press the fork button on the top right of the repo, or [here](https://github.com/AI-and-Blockchain/F23_Package_Tracker/fork)
+ * Install All Requirements 
+    * Download through the command line
+    ```sh
+    $ pip install -r requirements.txt
+    ```
+
 
 
 ## Blockchain Component
