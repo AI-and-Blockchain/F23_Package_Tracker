@@ -1,0 +1,15 @@
+.App {
+  text-align: center;
+}
+
+.homeHeader {
+  background-color: teal;
+  padding: 50px;
+  margin-top: 0;
+  margin-bottom: 50px;
+}
+
+.flexbox{
+  display: flex;
+  flex-direction: row;
+}

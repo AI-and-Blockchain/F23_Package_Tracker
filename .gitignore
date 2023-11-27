@@ -3,3 +3,9 @@
 
 #Ignore json from compiled code
 *.json
+
+#Ignore vmware
+*.exe
+
+#Ignore pycache folder
+**/__pycache__
