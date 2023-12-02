@@ -6,9 +6,9 @@ from typing import Annotated
 
 import uvicorn
 from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 
 #Compiles solidity code in python so that it can be interacted with, then create API
-
 w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
 chain_id = 1337
 address = "0x36a5526981F69E104553bbEbF6e3072AF9052D2F"
@@ -93,6 +93,16 @@ print(f"Done! Contract deployed to {transaction_receipt.contractAddress}")
 #Create API
 app = FastAPI()
 
+origins=["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 
 #Change this to put
@@ -145,15 +155,15 @@ def updateDriver(driver: str):
     return {package_tracker_root.functions.displayStatus().call()}
 
 @app.get("/details/")
-async def updatePackage(details: Annotated[list[str] | None, Query()] = ["none", "none", "none", "none"]):
+async def updatePackage(q: Annotated[list[str] | None, Query()] = None):
     global nonce
     nonce += 1
     #Add details to package
-    query = {"q" : details}['q']
+    query = {"q" : q}['q']
     sender = query[0]
-    recipient = details[1]
-    start = details[2]
-    end = details[3]
+    recipient = q[1]
+    start = q[2]
+    end = q[3]
     package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
     updatePackage = package_tracker_root.functions.initialPackage(sender, recipient, start, end).build_transaction({
         "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce
