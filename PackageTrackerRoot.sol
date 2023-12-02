@@ -8,32 +8,53 @@ contract PackageTrackerRoot {
         string recipient;
         string deliverer;
         string status;
-        string startAddress;
-        string endAddress;
+        bool claimed;
+        //to be done:
+        /*
+            add address(delivery) and verify that the delivery address coincides with
+            the final address of the final scan
+
+            possibly take in wallet addresses of deliverer and recipient for secuirty
+        */
     }
+
+    //logs that the order has been initiated/created
+    event OrderCreated(
+        string indexed _sender, 
+        string indexed _recipient, 
+        string indexed _status);
+
+    event UpdateDelivererInfo(string indexed deliverer);
+
+    //emitted when the contract is first claimed
+    event Claimed(bool _claimed);
 
     // Declare a state variable of the struct type
     Parcel public MyParcel;
 
-    // Constructor to create the parcel 
-    constructor(string memory _sender, string memory _recipient, string memory _status) {
-        MyParcel.sender = _sender;
-        MyParcel.recipient = _recipient;
-        MyParcel.status = _status;
-    }
+    function createOrder(string memory _sender, string memory _recipient, string memory _status) 
+    public {
+        // Constructor to create the parcel 
+        MyParcel = Parcel({
+            sender: _sender,
+            recipient: _recipient,
+            deliverer: "",
+            status: _status,
+            claimed: true
+        });
+        //This is where we first scan the parcel and create the order
+        emit OrderCreated(_sender, _recipient, _status);
+        emit Claimed(true);
 
-    function initialPackage(string memory _sender, string memory _recipient, string memory start, string memory end) public returns (Parcel memory){
-        MyParcel.sender = _sender;
-        MyParcel.recipient = _recipient;
-        MyParcel.startAddress = start;
-        MyParcel.endAddress = end;
-        return MyParcel;
     }
+    
 
     // Function to update the struct with the deliverer and subsequently update the status
     function updateDeliverer(string memory _deliverer) public returns (Parcel memory) {
         MyParcel.deliverer = _deliverer;
         updateStatus("Deliverer Found");
+        //Second scan complete and deliverer has been found and updated
+        emit UpdateDelivererInfo(_deliverer);
         return MyParcel;
     }
 
@@ -43,11 +64,14 @@ contract PackageTrackerRoot {
         return MyParcel;
     }
 
-    function returnPackageDetails() public returns (string memory, string memory, string memory, string memory){
-        return (MyParcel.sender, MyParcel.recipient, MyParcel.startAddress, MyParcel.endAddress);
+
+    //function to be launched on termination of the order
+    function endOrder() public returns (Parcel memory) {
+        MyParcel.status = "Delivered";
+        return MyParcel;
     }
 
-    function displayStatus() public view returns (string memory) {
-        return MyParcel.status;
+    function claimed() public view returns (bool) {
+        return MyParcel.claimed;
     }
 }
