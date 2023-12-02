@@ -102,9 +102,7 @@ if __name__ == "__main__":
     
     # Extract input and output data
     x, y = df.drop(columns=["vol"]), df.vol.values
-    
-    print(df["segmentid"].nunique())
-    
+        
     # Perform any data transformations on x or y here...
     xfit = MinMaxScaler()
     yfit = MinMaxScaler()
@@ -118,18 +116,21 @@ if __name__ == "__main__":
     x_train, x_test = torch.Tensor(x[:train_cutoff]), torch.Tensor(x[train_cutoff:])
     y_train, y_test = torch.Tensor(y[:train_cutoff]), torch.Tensor(y[train_cutoff:])
     
+    # Prepare datasets for interacting with the model
     x_train = torch.reshape(x_train, (x_train.shape[0], 1, x_train.shape[1]))
     x_test = torch.reshape(x_test, (x_test.shape[0], 1, x_test.shape[1]))
     
+    # Output dataset statistics
     print("Total samples: ", len(x))
     print("Training shape: ", x_train.shape, y_train.shape)
     print("Testing shape: ", x_test.shape, y_test.shape)
     
+    # Init model hyperparameters
     input_size = 3
     output_size = 1
     hidden_size = 32
     num_layers = 1
-    epochs = 30
+    epochs = 10
     batch_size = 100000 # be mindful of RAM allocation
     learning_rate = 1e-3
     model = TrafficModel(output_size, input_size, hidden_size, num_layers)
@@ -137,15 +138,17 @@ if __name__ == "__main__":
     optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
     
     # Train
-    TRAIN = False
+    new_model_name = "model-10.pt"
+    
+    TRAIN = True
     if TRAIN:
         for epoch in range(epochs):
             train(epoch, batch_size, model, optimiser, loss, x_train, y_train, x_test, y_test)
     
         # Save model
-        torch.save(model.state_dict(), "models/model-10.pt")
+        torch.save(model.state_dict(), f"models/{new_model_name}")
         print("Saved model")
-    else:
-        model.load_state_dict(torch.load("models/model-1000.pt"))
-        model.eval()
-        print("Loaded model")
+    # else:
+    #     model.load_state_dict(torch.load("models/model-1000.pt"))
+    #     model.eval()
+    #     print("Loaded model")
