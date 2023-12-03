@@ -34,6 +34,7 @@ class TrafficModel(nn.Module):
         x = self.relu(x)
         x = self.fc_2(x)
         return x
+    
 
 
 def train(epoch, batch_size, lstm, optimiser, loss, x_train, y_train, x_test, y_test):

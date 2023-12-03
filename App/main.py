@@ -1,5 +1,8 @@
 import sys
-
+import os
+sys.path.append(os.getcwd() + "\\..\\AI")
+from traffic_volume_classification import TrafficModel
+import torch
 from PyQt6 import QtGui
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -23,10 +26,16 @@ class MainController:
     def __init__(self):
         self.view = BoardUi()
         self.view.claimPackageButton.clicked.connect(self.claimPackage)
+        self.model = TrafficModel()
         #self.view.addPackage.clicked.connect(self.addPackage)
         #self.view.viewPackageStatus.clicked.connect(self.viewPackage)
 
         self.view.show()
+        
+    def load_model(self, fname):
+        # Loads model and prepares it for evaluation
+        self.model.load_state_dict(torch.load(fname))
+        self.model.eval()
 
     def claimPackage(self):
         dialog = QDialog(self.view)
@@ -65,4 +74,5 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     #app.setWindowIcon(QtGui.QIcon(os.path.join(basedir, "bargeLogo.ico")))
     controller = MainController()
+    controller.load_model("model-1000.pt") # needs args
     app.exec()
