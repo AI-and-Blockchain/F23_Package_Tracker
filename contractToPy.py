@@ -152,7 +152,6 @@ def updateDriver(driver: str):
     #Send the transaction
     send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
     w3.eth.wait_for_transaction_receipt(send_start)
-    return {package_tracker_root.functions.displayStatus().call()}
 
 #@app.get("/details/")
 #async def updatePackage(q: Annotated[list[str] | None, Query()] = None):
@@ -200,6 +199,22 @@ async def addPackage(q: Annotated[list[str] | None, Query()] = None):
     w3.eth.wait_for_transaction_receipt(send_start)
     return query
 
+#Mark the package as delivered
+@app.get("/delivered")
+async def delivered():
+    global nonce
+    nonce += 1
+    package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
+    delivered_package = package_tracker_root.functions.endOrder().build_transaction({
+        "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce
+    })
+    #Sign transaction
+    sign_update = w3.eth.account.sign_transaction(
+        delivered_package, private_key=private_key
+    )
+    send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
+    w3.eth.wait_for_transaction_receipt(send_start)
+    return("Delivered")
 
 @app.get("/package_details")
 async def getPackage():

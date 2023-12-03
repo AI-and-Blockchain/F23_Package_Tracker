@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from "./navbar"
 import axios from 'axios';
 
 const AddPage = () => {
   return (
     <div>
+      <Navbar/>
       <h1>Please enter all details below</h1>
       <Input/>
     </div>

@@ -40,7 +40,7 @@ contract PackageTrackerRoot {
         MyParcel = Parcel({
             sender: _sender,
             recipient: _recipient,
-            deliverer: "",
+            deliverer: "None",
             status: _status,
             claimed: true,
             startAddress: _startAddress,

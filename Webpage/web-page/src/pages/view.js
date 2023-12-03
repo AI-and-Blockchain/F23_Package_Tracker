@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import add from './add'
 import axios from 'axios';
+import Navbar from "./navbar"
 
 
 const ViewPage = () => {
@@ -26,6 +26,7 @@ const ViewPage = () => {
   
   return (
     <div>
+      <Navbar/>
       <h1>Package Details</h1>
       <hr/>
       {"Sender: " + sender}
