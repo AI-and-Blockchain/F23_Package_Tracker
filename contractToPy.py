@@ -6,9 +6,9 @@ from typing import Annotated
 
 import uvicorn
 from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 
 #Compiles solidity code in python so that it can be interacted with, then create API
-
 w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
 chain_id = 1337
 address = "0x36a5526981F69E104553bbEbF6e3072AF9052D2F"
@@ -56,7 +56,7 @@ PackageTrackerRoot = w3.eth.contract(abi=abi, bytecode=bytecode)
 nonce = w3.eth.get_transaction_count(address)
 
 # build transaction
-transaction = PackageTrackerRoot.constructor("empty", "empty", "empty").build_transaction(
+transaction = PackageTrackerRoot.constructor().build_transaction(
     {
         "chainId": chain_id,
         "gasPrice": w3.eth.gas_price,
@@ -93,6 +93,16 @@ print(f"Done! Contract deployed to {transaction_receipt.contractAddress}")
 #Create API
 app = FastAPI()
 
+origins=["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 
 #Change this to put
@@ -103,7 +113,6 @@ def updateStatus(status: str):
     nonce += 1
     #Update status of package
     package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
-    previous_status = package_tracker_root.functions.displayStatus().call()
     update_status = package_tracker_root.functions.updateStatus(status).build_transaction({
     "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce 
     })
@@ -114,14 +123,15 @@ def updateStatus(status: str):
     #Send the transaction
     send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
     w3.eth.wait_for_transaction_receipt(send_start)
-    new_status = package_tracker_root.functions.displayStatus().call()
-    return { "Package was successfully updated" if (previous_status != new_status) else "Package was not updated"}  
+    #return { "Package was successfully updated" if (previous_status != new_status) else "Package was not updated"}  
+    return "Package was successfully updated"
 
+#Deprecated function
 #Get status of package
-@app.get("/status")
-def getDetails():
-    package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
-    return {package_tracker_root.functions.displayStatus().call()}
+#@app.get("/status")
+#def getDetails():
+#    package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
+#    return {package_tracker_root.functions.displayStatus().call()}
 
 
 #Change to post
@@ -142,30 +152,69 @@ def updateDriver(driver: str):
     #Send the transaction
     send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
     w3.eth.wait_for_transaction_receipt(send_start)
-    return {package_tracker_root.functions.displayStatus().call()}
+
+#@app.get("/details/")
+#async def updatePackage(q: Annotated[list[str] | None, Query()] = None):
+#    global nonce
+#    nonce += 1
+#    #Add details to package
+#    query = {"q" : q}['q']
+#    sender = query[0]
+#    recipient = q[1]
+#    start = q[2]
+#    end = q[3]
+#    package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
+#    updatePackage = package_tracker_root.functions.initialPackage(sender, recipient, start, end).build_transaction({
+#        "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce
+#    })
+#    #Sign the transaction
+#    sign_update = w3.eth.account.sign_transaction(
+#        updatePackage, private_key = private_key
+#    )
+#    #Send the transaction
+#    send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
+#    w3.eth.wait_for_transaction_receipt(send_start)
+#    return query
 
 @app.get("/details/")
-async def updatePackage(details: Annotated[list[str] | None, Query()] = ["none", "none", "none", "none"]):
+async def addPackage(q: Annotated[list[str] | None, Query()] = None):
     global nonce
     nonce += 1
-    #Add details to package
-    query = {"q" : details}['q']
+    #Add details to package 
+    query = {"q": q}['q']
     sender = query[0]
-    recipient = details[1]
-    start = details[2]
-    end = details[3]
+    recipient = query[1]
+    start = query[2]
+    end = query[3]
     package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
-    updatePackage = package_tracker_root.functions.initialPackage(sender, recipient, start, end).build_transaction({
+    initialPackage = package_tracker_root.functions.createOrder(sender, recipient, "Package created", start, end).build_transaction({
         "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce
     })
     #Sign the transaction
     sign_update = w3.eth.account.sign_transaction(
-        updatePackage, private_key = private_key
+        initialPackage, private_key=private_key
     )
     #Send the transaction
-    send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
+    send_start =  w3.eth.send_raw_transaction(sign_update.rawTransaction)
     w3.eth.wait_for_transaction_receipt(send_start)
     return query
+
+#Mark the package as delivered
+@app.get("/delivered")
+async def delivered():
+    global nonce
+    nonce += 1
+    package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
+    delivered_package = package_tracker_root.functions.endOrder().build_transaction({
+        "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce
+    })
+    #Sign transaction
+    sign_update = w3.eth.account.sign_transaction(
+        delivered_package, private_key=private_key
+    )
+    send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
+    w3.eth.wait_for_transaction_receipt(send_start)
+    return("Delivered")
 
 @app.get("/package_details")
 async def getPackage():
