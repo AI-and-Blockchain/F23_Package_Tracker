@@ -8,6 +8,8 @@ contract PackageTrackerRoot {
         string recipient;
         string deliverer;
         string status;
+        string startAddress;
+        string endAddress;
         bool claimed;
         //to be done:
         /*
@@ -32,7 +34,7 @@ contract PackageTrackerRoot {
     // Declare a state variable of the struct type
     Parcel public MyParcel;
 
-    function createOrder(string memory _sender, string memory _recipient, string memory _status) 
+    function createOrder(string memory _sender, string memory _recipient, string memory _status, string memory _startAddress, string memory _endAddress) 
     public {
         // Constructor to create the parcel 
         MyParcel = Parcel({
@@ -40,12 +42,13 @@ contract PackageTrackerRoot {
             recipient: _recipient,
             deliverer: "",
             status: _status,
-            claimed: true
+            claimed: true,
+            startAddress: _startAddress,
+            endAddress: _endAddress
         });
         //This is where we first scan the parcel and create the order
         emit OrderCreated(_sender, _recipient, _status);
         emit Claimed(true);
-
     }
     
 
@@ -62,6 +65,11 @@ contract PackageTrackerRoot {
     function updateStatus(string memory _status) public returns (Parcel memory) {
         MyParcel.status = _status;
         return MyParcel;
+    }
+
+    //Function to return all details of package
+    function returnPackageDetails() public returns (string memory, string memory, string memory, string memory, string memory, string memory){
+        return (MyParcel.sender, MyParcel.recipient, MyParcel.startAddress, MyParcel.endAddress, MyParcel.deliverer, MyParcel.status);
     }
 
 

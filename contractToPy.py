@@ -56,7 +56,7 @@ PackageTrackerRoot = w3.eth.contract(abi=abi, bytecode=bytecode)
 nonce = w3.eth.get_transaction_count(address)
 
 # build transaction
-transaction = PackageTrackerRoot.constructor("empty", "empty", "empty").build_transaction(
+transaction = PackageTrackerRoot.constructor().build_transaction(
     {
         "chainId": chain_id,
         "gasPrice": w3.eth.gas_price,
@@ -113,7 +113,6 @@ def updateStatus(status: str):
     nonce += 1
     #Update status of package
     package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
-    previous_status = package_tracker_root.functions.displayStatus().call()
     update_status = package_tracker_root.functions.updateStatus(status).build_transaction({
     "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce 
     })
@@ -124,14 +123,15 @@ def updateStatus(status: str):
     #Send the transaction
     send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
     w3.eth.wait_for_transaction_receipt(send_start)
-    new_status = package_tracker_root.functions.displayStatus().call()
-    return { "Package was successfully updated" if (previous_status != new_status) else "Package was not updated"}  
+    #return { "Package was successfully updated" if (previous_status != new_status) else "Package was not updated"}  
+    return "Package was successfully updated"
 
+#Deprecated function
 #Get status of package
-@app.get("/status")
-def getDetails():
-    package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
-    return {package_tracker_root.functions.displayStatus().call()}
+#@app.get("/status")
+#def getDetails():
+#    package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
+#    return {package_tracker_root.functions.displayStatus().call()}
 
 
 #Change to post
@@ -154,28 +154,52 @@ def updateDriver(driver: str):
     w3.eth.wait_for_transaction_receipt(send_start)
     return {package_tracker_root.functions.displayStatus().call()}
 
+#@app.get("/details/")
+#async def updatePackage(q: Annotated[list[str] | None, Query()] = None):
+#    global nonce
+#    nonce += 1
+#    #Add details to package
+#    query = {"q" : q}['q']
+#    sender = query[0]
+#    recipient = q[1]
+#    start = q[2]
+#    end = q[3]
+#    package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
+#    updatePackage = package_tracker_root.functions.initialPackage(sender, recipient, start, end).build_transaction({
+#        "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce
+#    })
+#    #Sign the transaction
+#    sign_update = w3.eth.account.sign_transaction(
+#        updatePackage, private_key = private_key
+#    )
+#    #Send the transaction
+#    send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
+#    w3.eth.wait_for_transaction_receipt(send_start)
+#    return query
+
 @app.get("/details/")
-async def updatePackage(q: Annotated[list[str] | None, Query()] = None):
+async def addPackage(q: Annotated[list[str] | None, Query()] = None):
     global nonce
     nonce += 1
-    #Add details to package
-    query = {"q" : q}['q']
+    #Add details to package 
+    query = {"q": q}['q']
     sender = query[0]
-    recipient = q[1]
-    start = q[2]
-    end = q[3]
+    recipient = query[1]
+    start = query[2]
+    end = query[3]
     package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
-    updatePackage = package_tracker_root.functions.initialPackage(sender, recipient, start, end).build_transaction({
+    initialPackage = package_tracker_root.functions.createOrder(sender, recipient, "Package created", start, end).build_transaction({
         "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce
     })
     #Sign the transaction
     sign_update = w3.eth.account.sign_transaction(
-        updatePackage, private_key = private_key
+        initialPackage, private_key=private_key
     )
     #Send the transaction
-    send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
+    send_start =  w3.eth.send_raw_transaction(sign_update.rawTransaction)
     w3.eth.wait_for_transaction_receipt(send_start)
     return query
+
 
 @app.get("/package_details")
 async def getPackage():
