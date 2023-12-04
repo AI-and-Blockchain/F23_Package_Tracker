@@ -8,8 +8,6 @@ function GetETA(start, end) {
   // if (start === "None" || end === "None") {
   //   return "None";
   // }
-  console.log("Entered ETA");
-
   // fetch("http://127.0.0.1:8000/process", {
   //   method: "POST",
   //   mode: "no-cors",

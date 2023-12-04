@@ -1,12 +1,13 @@
 import sys
 import os
-sys.path.append(os.getcwd() + "\\..\\..\\AI")
+sys.path.append(os.getcwd() + "\\..\\..\\..\\AI")
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from traffic_volume_classification import TrafficModel
 import torch
 import numpy as np
 import math
+import random
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -34,16 +35,16 @@ model = TrafficModel(output_size, input_size, hidden_size, num_layers)
 @cross_origin()
 def query_model():
     # Pull the below from POST body instead...
-    hour = 0
-    minute = 0
-    id = 1000
+    hour = random.randint(0, 24)
+    minute = random.randint(0, 60)
+    id = 17654
     sample = torch.Tensor(np.array([hour, minute, id]))
     sample = torch.reshape(sample, (1, 1, 3))
     return str(math.floor(model(sample)[0].item() * 500)) + " minutes"
 
 if __name__ == "__main__":
     # Config AI model
-    model.load_state_dict(torch.load("../../AI/models/model-1000.pt"))
+    model.load_state_dict(torch.load("../../../AI/models/model-1000.pt"))
     model.eval()
     
     # Start server
