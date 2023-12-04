@@ -11,8 +11,13 @@ from fastapi.middleware.cors import CORSMiddleware
 #Compiles solidity code in python so that it can be interacted with, then create API
 w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
 chain_id = 1337
-address = "0x36a5526981F69E104553bbEbF6e3072AF9052D2F"
-private_key = "0x016ddaad616481081959bef005937272eb58c67830b258075b23df07061a33ee" # leaving the private key like this is very insecure if you are working on real world project 
+
+#Change these if necessary
+#***********************************************************************#
+address = "0xB4a6d25949a5e9b223ca3969e70A07EF2a3379B5"
+private_key = "4378842b315208fcc97412dc75ade14cf7372e90c904e93c80d52bd05718e307" # leaving the private key like this is very insecure if you are working on real world project 
+#***********************************************************************#
+
 nonce = w3.eth.get_transaction_count(address)
 transaction_receipt = None
 abi = None

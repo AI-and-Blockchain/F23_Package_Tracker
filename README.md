@@ -64,12 +64,37 @@ The Package Tracker introduces faster and safer standards of delivery for cities
     $ git clone https://github.com/AI-and-Blockchain/F23_Package_Tracker
     ```
     * To fork, press the fork button on the top right of the repo, or [here](https://github.com/AI-and-Blockchain/F23_Package_Tracker/fork)
+ * Install Applications
+    * Node.js: download [here](https://nodejs.org/en)
+    * Ganache: downlaod [here](https://trufflesuite.com/ganache/)
  * Install All Requirements 
     * Download through the command line
     ```sh
     $ pip install -r requirements.txt
     ```
-
+    ```sh
+    $ npm install
+    ```
+## Setting up the webpage and API
+ * Do the instructions in this order
+ * Open Ganache
+    * Press Quickstart if it is the first time, otherwise choose a already created workspace
+ * Click the key icon on any of the Addresses on the right side of the screen
+    * In contractToPy.py, towards the top of the file, change the address and private key to the ones shown in ganache and save the file
+ * Run the API
+    * Run the command in the terminal
+    ```sh
+    $ uvicorn contractToPy:app --reload
+    ```
+ * Open a new terminal and change directories
+    * Run the command in the terminal
+    ```sh
+    $ cd Webpage/web-page
+    ```
+    * Run npm
+    ```sh
+    npm start
+    ```
 
 
 ## Blockchain Component
