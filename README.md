@@ -79,22 +79,35 @@ The Package Tracker introduces faster and safer standards of delivery for cities
 ## Setting up the webpage and API
  * Do the instructions in this order
  * Open Ganache
-    * Press Quickstart if it is the first time, otherwise choose a already created workspace
+    * Press Quickstart if it is the first time, otherwise choose an already created workspace
  * Click the key icon on any of the Addresses on the right side of the screen
     * In contractToPy.py, towards the top of the file, change the address and private key to the ones shown in ganache and save the file
- * Run the API
+ * Run the Blockchain API
+    * Change directories 
+    ```sh
+    $ cd Blockchain
+    ```
     * Run the command in the terminal
     ```sh
     $ uvicorn contractToPy:app --reload
     ```
- * Open a new terminal and change directories
-    * Run the command in the terminal
+ * Run the AI API
+    * Open a new terminal and change directories
+    ```sh
+    $ cd Webpage/web-page/src
+    ```
+    * Run the server
+    ```sh
+    $ python server.py
+    ```
+ * Run the frontend
+    * Open a new terminal and change directories
     ```sh
     $ cd Webpage/web-page
     ```
     * Run npm
     ```sh
-    npm start
+    $ npm start
     ```
 
 ## Demo Video
