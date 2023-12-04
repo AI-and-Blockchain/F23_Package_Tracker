@@ -1,7 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from "./navbar"
+import Navbar from "./navbar";
 
+
+
+function GetETA(start, end) {
+  // if (start === "None" || end === "None") {
+  //   return "None";
+  // }
+  console.log("Entered ETA");
+
+  // fetch("http://127.0.0.1:8000/process", {
+  //   method: "POST",
+  //   mode: "no-cors",
+  //   headers: {
+  //     "Accept": "application/json",
+  //     "Content-Type": "application/json; charset=utf-8",
+  //   },
+  //   body: JSON.stringify({
+  //     name: "start",
+  //     email: "end"
+  //   }),
+  // })
+  // .then(response => response.json())
+  // .then(data => {
+  //   console.log(data);
+  // })
+  // .catch(error => {
+  //   console.error("Error:", error);
+  // });
+
+  const [eta, setETA] = useState("None");
+
+  fetch("http://127.0.0.1:8000/process")
+    .then(response => response.text())
+    .then(data => {
+      console.log(data);
+      setETA(data);
+    })
+    .catch(error => {
+      console.log("FAILED");
+      console.error("Error:",error);
+    });
+  
+  return eta;
+  
+}
 
 const ViewPage = () => {
   const [sender, setSender] = useState("None");
@@ -22,6 +66,9 @@ const ViewPage = () => {
     setDeliverer(result.data[4])
     setStatus(result.data[5])
     })
+    .catch(error => {
+      console.error("Error:", error);
+    })
   
   
   return (
@@ -40,6 +87,8 @@ const ViewPage = () => {
       {"Deliverer: " + deliverer}
       <hr/>
       {"Status: " + status}
+      <hr/>
+      {"ETA: " + GetETA("1", "2")}
       <hr/>
     </div>
   );
