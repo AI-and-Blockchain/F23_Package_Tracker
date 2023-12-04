@@ -1,9 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
-
-import './App.css';
-//import searchBar from './common/components/searchBar';
-import {React, useState, useEffect} from 'react';
+import {React} from 'react';
 
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
@@ -12,6 +8,7 @@ import AddPage from "./pages/add"
 import ClaimPage from "./pages/claim"
 import ViewPage from "./pages/view"
 
+//Main function that houses all the pages, routes them so they are connected
 function App() {
   return(
     <div className = "App">

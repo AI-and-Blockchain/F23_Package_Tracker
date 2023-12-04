@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from "./navbar";
+//import { start } from 'repl';
 
 
-
+//Get ETA from start to end destination, calls AI API
 function GetETA(start, end) {
   // if (start === "None" || end === "None") {
   //   return "None";
@@ -45,6 +46,7 @@ function GetETA(start, end) {
   
 }
 
+//Controls the view page
 const ViewPage = () => {
   const [sender, setSender] = useState("None");
   const [recipient, setRecipient] = useState("None");
@@ -53,7 +55,7 @@ const ViewPage = () => {
   const [deliverer, setDeliverer] = useState("None");
   const [status, setStatus] = useState("None");
 
-  
+  //Gets data back from API of the smart contract and displays it
   axios
    .get('http://127.0.0.1:8000/package_details')
    .then((result) => {
@@ -86,24 +88,10 @@ const ViewPage = () => {
       <hr/>
       {"Status: " + status}
       <hr/>
-      {"ETA: " + GetETA("1", "2")}
+      {"ETA: " + GetETA(startAddress, endAddress)}
       <hr/>
     </div>
   );
 };
-
-/*
-const returnData = () => {
-  axios
-   .get('http://127.0.0.1:8000/package_details')
-   .then((result) => {
-    sender = result.data[0]
-    recipient = result.data[1]
-    startAddress = result.data[2]
-    endAddress = result.data[3]
-    deliverer = result.data[4]
-    status = result.data[5]
-   })
-}*/
 
 export default ViewPage;

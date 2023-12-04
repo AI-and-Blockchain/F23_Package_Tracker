@@ -12,10 +12,10 @@ from fastapi.middleware.cors import CORSMiddleware
 w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
 chain_id = 1337
 
-#Change these if necessary
+#Change these if necessary, from ganache
 #***********************************************************************#
-address = "0xB4a6d25949a5e9b223ca3969e70A07EF2a3379B5"
-private_key = "4378842b315208fcc97412dc75ade14cf7372e90c904e93c80d52bd05718e307" # leaving the private key like this is very insecure if you are working on real world project 
+address = "0x36a5526981F69E104553bbEbF6e3072AF9052D2F"
+private_key = "0x016ddaad616481081959bef005937272eb58c67830b258075b23df07061a33ee" # leaving the private key like this is very insecure if you are working on real world project 
 #***********************************************************************#
 
 nonce = w3.eth.get_transaction_count(address)
@@ -26,6 +26,7 @@ abi = None
 with open("PackageTrackerRoot.sol", "r") as file:
     package_tracker_file = file.read()
 
+#Compiles the code from the solidity file so it can be interacted with in python
 compiled_sol = compile_standard(
     {
         "language": "Solidity",
@@ -40,8 +41,8 @@ compiled_sol = compile_standard(
     },
     solc_version="0.8.0",
 )
-#print(compiled_sol)
 
+#Dump into a json file 
 with open("compiled_code.json", "w") as file:
     json.dump(compiled_sol, file)
 
@@ -50,11 +51,6 @@ bytecode = compiled_sol["contracts"]["PackageTrackerRoot.sol"]["PackageTrackerRo
 # get abi
 abi = json.loads(compiled_sol["contracts"]["PackageTrackerRoot.sol"]["PackageTrackerRoot"]["metadata"])["output"]["abi"]
 
-# For connecting to ganache
-    #w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
-    #chain_id = 1337
-    #address = "0x36a5526981F69E104553bbEbF6e3072AF9052D2F"
-    #private_key = "0x016ddaad616481081959bef005937272eb58c67830b258075b23df07061a33ee" # leaving the private key like this is very insecure if you are working on real world project
 # Create the contract in Python
 PackageTrackerRoot = w3.eth.contract(abi=abi, bytecode=bytecode)
 # Get the number of latest transaction
@@ -79,25 +75,12 @@ print("Waiting for transaction to finish...")
 transaction_receipt = w3.eth.wait_for_transaction_receipt(transaction_hash)
 print(f"Done! Contract deployed to {transaction_receipt.contractAddress}")
 
-    ##Update status of package
-    #package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
-    #update_status = package_tracker_root.functions.updateStatus("lost").build_transaction({
-    #    "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce + 1
-    #})
-    ##Sign the transaction
-    #sign_update = w3.eth.account.sign_transaction(
-    #    update_status, private_key = private_key
-    #)
-    ##Send the transaction
-    #send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
-    #w3.eth.wait_for_transaction_receipt(send_start)
 
-#Call displayStatus function to test update
-#print("package status: " + package_tracker_root.functions.displayStatus().call())
 
-#Create API
+###############################################################################Create API###############################################################################
 app = FastAPI()
 
+#Allow CORS to allow frontend to make requests to the API
 origins=["*"]
 
 app.add_middleware(
@@ -108,9 +91,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
-#Change this to put
 #Update Status of package
 @app.get("/status/{status}")
 def updateStatus(status: str):
@@ -131,15 +111,7 @@ def updateStatus(status: str):
     #return { "Package was successfully updated" if (previous_status != new_status) else "Package was not updated"}  
     return "Package was successfully updated"
 
-#Deprecated function
-#Get status of package
-#@app.get("/status")
-#def getDetails():
-#    package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
-#    return {package_tracker_root.functions.displayStatus().call()}
 
-
-#Change to post
 #Update package to have a driver
 @app.get("/deliverer/{driver}")
 def updateDriver(driver: str):
@@ -158,29 +130,7 @@ def updateDriver(driver: str):
     send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
     w3.eth.wait_for_transaction_receipt(send_start)
 
-#@app.get("/details/")
-#async def updatePackage(q: Annotated[list[str] | None, Query()] = None):
-#    global nonce
-#    nonce += 1
-#    #Add details to package
-#    query = {"q" : q}['q']
-#    sender = query[0]
-#    recipient = q[1]
-#    start = q[2]
-#    end = q[3]
-#    package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
-#    updatePackage = package_tracker_root.functions.initialPackage(sender, recipient, start, end).build_transaction({
-#        "chainId": chain_id, "from": address, "gasPrice": w3.eth.gas_price, "nonce": nonce
-#    })
-#    #Sign the transaction
-#    sign_update = w3.eth.account.sign_transaction(
-#        updatePackage, private_key = private_key
-#    )
-#    #Send the transaction
-#    send_start = w3.eth.send_raw_transaction(sign_update.rawTransaction)
-#    w3.eth.wait_for_transaction_receipt(send_start)
-#    return query
-
+#Parse a list to send variables to the smart contract
 @app.get("/details/")
 async def addPackage(q: Annotated[list[str] | None, Query()] = None):
     global nonce
@@ -221,6 +171,7 @@ async def delivered():
     w3.eth.wait_for_transaction_receipt(send_start)
     return("Delivered")
 
+#Return the package details, such as addresses, names, etc.
 @app.get("/package_details")
 async def getPackage():
     package_tracker_root = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)

@@ -20,6 +20,15 @@ contract PackageTrackerRoot {
         */
     }
 
+    constructor() {
+        MyParcel.sender = "None";
+        MyParcel.recipient = "None";
+        MyParcel.status = "None";
+        MyParcel.startAddress = "None";
+        MyParcel.endAddress = "None";
+        MyParcel.deliverer = "None";
+    }
+
     //logs that the order has been initiated/created
     event OrderCreated(
         string indexed _sender, 

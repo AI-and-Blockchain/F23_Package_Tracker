@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Navbar from "./navbar"
 import axios from 'axios';
 
 //Temporary way of making sure deliverer is valid
 const ids = ['19047629']
 
-
+//Controls the claim page
 const ClaimPage = () => {
   return (
     <div>
@@ -20,6 +20,7 @@ const ClaimPage = () => {
 
 //window.location.reload()
 
+//Sends data to the smart contract through the API, making sure the deliverer is valid
 const Input = () => {
   const [name, setName] = useState("");
   const [id, setID] = useState("");
@@ -39,6 +40,7 @@ const Input = () => {
     }
   }
 
+  //A form that allows input and submits them through the API
   return (
     <>
     <form onSubmit={handleSubmit}>
@@ -66,9 +68,11 @@ const Input = () => {
   )
 }
 
+//The second form, which allows the package to be marked as delivered
 const Delivered = () => {
   const [id, setID] = useState("");
 
+  //If id is valid, mark the package as delivered
   const handleSubmit = (event) => {
     event.preventDefault()
     if(ids.includes(id)){
@@ -80,6 +84,7 @@ const Delivered = () => {
     }
   }
 
+  //Form that allows user to enter their ID
   return (
     <>
     <form onSubmit={handleSubmit}>

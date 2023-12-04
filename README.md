@@ -50,9 +50,10 @@ The Package Tracker introduces faster and safer standards of delivery for cities
 
 ### Built With
 
-* [![Remix][Remix]][Remix-url]
+* [![Solidity][Solidity]][Solidity-url]
 * [![Pytorch][Pytorch]][Pytorch-url]
-* [![Chainlink][Chainlink]][Chainlink-url]
+* [![React][React]][React-url]
+* [![FastAPI][FastAPI]][Fast-url]
 
 
 <!-- Getting Started -->
@@ -145,11 +146,14 @@ Distributed under the Apache License. See [LICENSE](https://github.com/AI-and-Bl
 
 
 
-[Remix]: https://img.shields.io/badge/Remix-000000.svg?style=for-the-badge&logo=Remix&logoColor=white
-[Remix-url]: https://remix.ethereum.org/
+[Solidity]: https://img.shields.io/badge/Solidity-363636.svg?style=for-the-badge&logo=Solidity&logoColor=white
+[Solidity-url]: https://soliditylang.org/
 
 [Pytorch]: https://img.shields.io/badge/PyTorch-EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white
 [Pytorch-url]: https://pytorch.org/
 
-[Chainlink]: https://img.shields.io/badge/Chainlink-375BD2.svg?style=for-the-badge&logo=Chainlink&logoColor=white
-[Chainlink-url]: https://chain.link/
+[React]: https://img.shields.io/badge/React-61DAFB.svg?style=for-the-badge&logo=React&logoColor=black
+[React-url]: https://react.dev/
+
+[FastAPI]: https://img.shields.io/badge/FastAPI-009688.svg?style=for-the-badge&logo=FastAPI&logoColor=white
+[Fast-url]: https://fastapi.tiangolo.com/

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Navbar from "./navbar"
 import axios from 'axios';
 
+
+//Controls the add package page
 const AddPage = () => {
   return (
     <div>
@@ -12,12 +14,14 @@ const AddPage = () => {
   );
 };
 
+//Allows user to input data about the package 
 const Input = () => {
   const [sender, setSender] = useState("");
   const [recipient, setRecipient] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
 
+  //When submit button is clicked, send data through the API as a list to parse
   const handleSubmit = (event) => {
     let begin = '?q='
     let string = begin.concat(sender, '&q=', recipient, '&q=', start, '&q=', end)
@@ -26,6 +30,7 @@ const Input = () => {
     alert("Your Package has been submitted!")
   }
 
+  //Form for user to input data
   return (
     <>
     <form onSubmit={handleSubmit}>
@@ -71,6 +76,5 @@ const Input = () => {
   )
 }
 
-//<button onCLick={acceptData(sender, recipient, start, end)}>Submit Data</button>
 
 export default AddPage;
